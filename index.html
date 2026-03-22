@@ -20,7 +20,6 @@
             overflow-x: hidden;
         }
 
-        /* Animasi Background Gradient */
         .bg-animated {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -28,7 +27,6 @@
             z-index: -1;
         }
 
-        /* Glassmorphism Effect */
         .glass-card {
             background: rgba(30, 41, 59, 0.7);
             backdrop-filter: blur(16px);
@@ -38,7 +36,6 @@
             overflow: hidden;
         }
 
-        /* Animasi Garis RGB */
         .rgb-line {
             position: relative;
         }
@@ -86,7 +83,6 @@
 
         .animate-fade { animation: fadeIn 0.4s ease-out forwards; }
         
-        /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #0f172a; }
         ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
@@ -98,9 +94,19 @@
             color: white !important;
         }
 
-        input:focus, select:focus, textarea:focus {
-            border-color: #3b82f6 !important;
-            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important;
+        .iframe-container {
+            position: relative;
+            width: 100%;
+            height: 70vh;
+            border-radius: 1rem;
+            overflow: hidden;
+            background: #1e293b;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
         }
     </style>
 </head>
@@ -173,7 +179,6 @@
         </nav>
 
         <main class="max-w-5xl mx-auto p-6 md:p-10 animate-fade">
-            <!-- Navigation Tabs -->
             <div class="flex flex-wrap gap-3 mb-10">
                 <button onclick="showSection('jurnal')" id="tab-jurnal" class="flex-1 min-w-[120px] px-6 py-4 rounded-2xl text-sm font-bold transition-all flex items-center justify-center gap-2 bg-blue-600 text-white shadow-blue-500/20 shadow-lg">
                     <i class="fas fa-book-open"></i> JURNAL
@@ -187,9 +192,8 @@
             </div>
 
             <div id="content-area" class="space-y-8">
-                <!-- Form Section -->
                 <div class="glass-card rgb-border p-8 rounded-3xl shadow-2xl">
-                    <!-- Jurnal -->
+                    <!-- Section Jurnal -->
                     <section id="section-jurnal" class="space-y-6">
                         <div class="flex items-center gap-3 mb-6">
                             <i class="fas fa-feather-pointed text-blue-500 text-2xl"></i>
@@ -226,7 +230,7 @@
                                 <textarea id="jurnal-tujuan" required rows="2" class="w-full px-4 py-3 border rounded-xl outline-none" placeholder="Target kompetensi siswa"></textarea>
                             </div>
                             <div class="col-span-full space-y-2">
-                                <label class="text-sm font-bold text-slate-400">Link Pendukung (Optional)</label>
+                                <label class="text-sm font-bold text-slate-400">Link Pendukung (Google Drive/Lainnya)</label>
                                 <input type="url" id="jurnal-link" class="w-full px-4 py-3 border rounded-xl outline-none" placeholder="https://drive.google.com/...">
                             </div>
                             <button type="submit" id="btn-jurnal" class="col-span-full bg-blue-600 hover:bg-blue-500 text-white font-black py-4 rounded-2xl shadow-xl transition-all active:scale-95 tracking-widest">
@@ -235,7 +239,7 @@
                         </form>
                     </section>
 
-                    <!-- Admin -->
+                    <!-- Section Admin -->
                     <section id="section-admin" class="hidden space-y-6">
                         <div class="flex items-center gap-3 mb-6">
                             <i class="fas fa-file-shield text-indigo-500 text-2xl"></i>
@@ -265,7 +269,7 @@
                         </form>
                     </section>
 
-                    <!-- Catatan -->
+                    <!-- Section Catatan -->
                     <section id="section-catatan" class="hidden space-y-6">
                         <div class="flex items-center gap-3 mb-6">
                             <i class="fas fa-triangle-exclamation text-orange-500 text-2xl"></i>
@@ -310,17 +314,17 @@
                     <div class="flex justify-between items-center mb-6">
                         <h3 class="font-black text-slate-200 flex items-center gap-2 tracking-widest">
                             <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-                            LOG AKTIVITAS KELAS: <span id="rekap-title-kelas" class="text-blue-400">-</span>
+                            LOG KELAS: <span id="rekap-title-kelas" class="text-blue-400">-</span>
                         </h3>
                         <button onclick="refreshData()" class="text-xs bg-white/5 hover:bg-white/10 text-blue-400 px-4 py-2 rounded-full font-bold border border-white/5 transition-all">
                             <i class="fas fa-rotate mr-1"></i> UPDATE
                         </button>
                     </div>
-                    <div class="table-container">
+                    <div class="overflow-x-auto">
                         <table class="w-full text-sm text-left border-collapse">
                             <thead class="bg-white/5 text-slate-400 font-bold uppercase text-[10px] tracking-widest">
                                 <tr id="table-head">
-                                    <th class="p-4 rounded-tl-xl">Timestamp</th>
+                                    <th class="p-4 rounded-tl-xl">Waktu</th>
                                     <th class="p-4" id="col-2">Info 1</th>
                                     <th class="p-4" id="col-3">Info 2</th>
                                     <th class="p-4 rounded-tr-xl">Aksi</th>
@@ -336,12 +340,31 @@
         </main>
     </div>
 
-    <!-- Modals -->
+    <!-- Preview Iframe Modal -->
+    <div id="preview-modal" class="hidden fixed inset-0 bg-black/90 backdrop-blur-lg flex flex-col items-center justify-center p-4 md:p-10 z-[150]">
+        <div class="w-full max-w-5xl flex justify-between items-center mb-4">
+            <div>
+                <h3 class="text-xl font-black text-white italic" id="preview-title">DOKUMEN PREVIEW</h3>
+                <p class="text-slate-400 text-xs tracking-widest uppercase" id="preview-subtitle"></p>
+            </div>
+            <button onclick="closePreview()" class="bg-red-500 hover:bg-red-600 text-white w-10 h-10 rounded-full flex items-center justify-center transition-all">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="iframe-container glass-card rgb-border">
+            <iframe id="preview-frame" src="about:blank"></iframe>
+        </div>
+        <div class="mt-4 flex gap-4">
+            <a id="preview-download" href="#" target="_blank" class="px-6 py-3 bg-white/5 hover:bg-white/10 text-white rounded-xl font-bold text-sm border border-white/10 transition-all">
+                <i class="fas fa-external-link-alt mr-2"></i> BUKA DI TAB BARU
+            </a>
+        </div>
+    </div>
+
+    <!-- Global Success/Error Modal -->
     <div id="success-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 z-[100]">
         <div class="glass-card rgb-border p-10 rounded-3xl max-w-sm w-full text-center shadow-2xl animate-fade">
-            <div id="modal-icon" class="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                <!-- Icon via JS -->
-            </div>
+            <div id="modal-icon" class="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6"></div>
             <h3 id="modal-title" class="text-2xl font-black text-white">SYSTEM STATUS</h3>
             <p id="modal-msg" class="text-slate-400 mt-2 mb-8"></p>
             <button onclick="closeModal()" class="w-full bg-white/5 hover:bg-white/10 text-white py-4 rounded-2xl font-black border border-white/10 transition-all tracking-widest">OK, LANJUTKAN</button>
@@ -413,6 +436,7 @@
 
         function populateStudentDropdown() {
             const select = document.getElementById('select-siswa');
+            if(!select) return;
             select.innerHTML = '<option value="">Pilih Nama Murid...</option>';
             const tClass = currentUser.kelas.toLowerCase().trim();
             studentsData.filter(s => s.kelas.toLowerCase().trim() === tClass)
@@ -438,6 +462,35 @@
 
         function refreshData() { fetchRekap(currentTab); }
 
+        function formatDriveUrl(url) {
+            if (!url) return "";
+            // Convert sharing link to preview link for iframe
+            if (url.includes('drive.google.com') && url.includes('/view')) {
+                return url.replace('/view', '/preview');
+            }
+            if (url.includes('drive.google.com') && url.includes('id=')) {
+                return url.replace('file/d/', 'file/d/').replace('/edit', '/preview');
+            }
+            return url;
+        }
+
+        function openPreview(url, title, info) {
+            if (!url) return;
+            const previewUrl = formatDriveUrl(url);
+            document.getElementById('preview-frame').src = previewUrl;
+            document.getElementById('preview-title').innerText = title;
+            document.getElementById('preview-subtitle').innerText = info;
+            document.getElementById('preview-download').href = url;
+            document.getElementById('preview-modal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden'; // Stop scrolling
+        }
+
+        function closePreview() {
+            document.getElementById('preview-modal').classList.add('hidden');
+            document.getElementById('preview-frame').src = "about:blank";
+            document.body.style.overflow = 'auto';
+        }
+
         async function fetchRekap(type) {
             const body = document.getElementById('rekap-body');
             const col2 = document.getElementById('col-2');
@@ -449,12 +502,8 @@
                 const res = await fetch(`${WEB_APP_URL}?type=${type}&_=${Date.now()}`);
                 const allData = await res.json();
                 
-                // FILTER: Hanya tampilkan data yang kelasnya sesuai dengan kelas guru saat login
                 const teacherClass = currentUser.kelas.toLowerCase().trim();
-                const data = allData.filter(item => {
-                    const itemClass = (item.kelas || "").toLowerCase().trim();
-                    return itemClass === teacherClass;
-                });
+                const data = allData.filter(item => (item.kelas || "").toLowerCase().trim() === teacherClass);
 
                 if (type === 'jurnal') {
                     col2.innerText = "Mata Pelajaran"; col3.innerText = "Topik Materi";
@@ -463,16 +512,25 @@
                             <td class="p-4 text-xs text-slate-500">${i.waktu || '-'}</td>
                             <td class="p-4 font-bold text-slate-200">${i.mapel || '-'}</td>
                             <td class="p-4 text-slate-400">${i.topik || '-'}</td>
-                            <td class="p-4"><a href="${i.link}" target="_blank" class="${i.link ? 'text-blue-400' : 'hidden'}"><i class="fas fa-link"></i></a></td>
+                            <td class="p-4">
+                                ${i.link ? `
+                                <button onclick="openPreview('${i.link}', '${i.mapel}', '${i.topik}')" class="text-blue-400 hover:text-blue-300 bg-blue-500/10 p-2 rounded-lg transition-all">
+                                    <i class="fas fa-eye"></i> Preview
+                                </button>` : '<span class="text-slate-600 text-xs italic">No Link</span>'}
+                            </td>
                         </tr>`).join('') : '<tr><td colspan="4" class="p-8 text-center text-slate-600 italic">Belum ada data jurnal untuk kelas ini.</td></tr>';
                 } else if (type === 'admin') {
-                    col2.innerText = "Jenis Perangkat"; col3.innerText = "Link Akses";
+                    col2.innerText = "Jenis Perangkat"; col3.innerText = "Status Link";
                     body.innerHTML = data.length ? data.map(i => `
                         <tr class="hover:bg-white/5 animate-fade">
                             <td class="p-4 text-xs text-slate-500">${i.waktu || '-'}</td>
                             <td class="p-4 font-bold text-indigo-400">${i.jenis || '-'}</td>
-                            <td class="p-4 text-slate-400 truncate max-w-[150px]">${i.link || '-'}</td>
-                            <td class="p-4"><a href="${i.link}" target="_blank" class="text-indigo-400"><i class="fas fa-external-link-alt"></i></a></td>
+                            <td class="p-4 text-slate-500 text-xs truncate max-w-[150px] italic">Encrypted Drive Link</td>
+                            <td class="p-4">
+                                <button onclick="openPreview('${i.link}', '${i.jenis}', 'ADMINISTRASI GURU')" class="text-indigo-400 hover:text-indigo-300 bg-indigo-500/10 p-2 rounded-lg transition-all">
+                                    <i class="fas fa-file-pdf"></i> Lihat File
+                                </button>
+                            </td>
                         </tr>`).join('') : '<tr><td colspan="4" class="p-8 text-center text-slate-600 italic">Belum ada perangkat ajar untuk kelas ini.</td></tr>';
                 } else if (type === 'catatan') {
                     col2.innerText = "Nama Siswa"; col3.innerText = "Pelanggaran";
@@ -512,7 +570,6 @@
             }
         }
 
-        // Form Submit Listeners
         document.getElementById('form-jurnal').addEventListener('submit', e => {
             e.preventDefault();
             const p = { 
